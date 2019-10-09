@@ -1,6 +1,6 @@
 window.onload = function() {
 
-var data = "../../sensorstesttt.json";
+var data = "../sensorstesttt.json";
 
 var requests = [d3.json(data), d3.json(data)];
 
