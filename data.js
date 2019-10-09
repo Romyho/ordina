@@ -1,6 +1,6 @@
 window.onload = function() {
 
-var data = "../../data/sensorstesttt.json";
+var data = "https://romyho.github.io/ordina/data/sensorstesttt.json";
 
 var requests = [d3.json(data), d3.json(data)];
 
