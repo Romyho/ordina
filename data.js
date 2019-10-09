@@ -1,6 +1,6 @@
 window.onload = function() {
 
-var data = "../../sensors.json";
+var data = "../../sensorstesttt.json";
 
 var requests = [d3.json(data), d3.json(data)];
 
@@ -8,146 +8,87 @@ var requests = [d3.json(data), d3.json(data)];
 Promise.all(requests).then(function(responses) {
 
 var Data = responses[0];
-console.log(Data);
-// make dictionary of data
-// var data = {};
+var WheelDiam = 0.7;
+var Circum = WheelDiam * Math.PI;
+var Fact = -Circum/360;
 var Time = [];
 var RotSpeed = [];
 var Speed = [];
 
-
 for (j in Data){
-  Time.push(Data[j].Time)
-  RotSpeed.push(Data[j].RotSpeed)
-  Speed.push(Data[j].Speed)
+  Time.push(Data[j].time.replace(',', '.'))
+  RotSpeed.push(Data[j].rotspeed.replace(',', '.'))
 
 }
 
-// var data1 = {x:[Time],
-//   y: [Speed],
-//    mode: 'lines'};
-//
-// var trace1 = {
-//   x: [1, 2, 3, 4],
-//   y: [10, 15, 13, 17],
-//   type: 'scatter',
-// };
-//
-// var trace2 = {
-//   x: [1, 2, 3, 4],
-//   y: [16, 5, 11, 9],
-//   type: 'scatter'
-// };
-//
-// var data = [data1];
-// Plotly.newPlot('myDiv', data, {}, {showSendToCloud: true});
+for (i in RotSpeed){
+  Speed.push(RotSpeed[i]*Fact)
+}
+var min_speed = 0;
+var max_speed = 1;
+for (i in Speed){
+  if(Speed[i]< min_speed){
+    min_speed = Speed[i];
+  }
+  if(Speed[i]> max_speed){
+    max_speed = Speed[i];
+  }
+}
 
-// var chart = new CanvasJS.Chart("chartContainer", {
-// 	animationEnabled: true,
-// 	theme: "light2",
-// 	title:{
-// 		text: "Simple Line Chart"
-// 	},
-// 	axisY:{
-// 		includeZero: false
-// 	},
-// 	data: [{
-// 		type: "line",
-// 		dataPoints: [x:Time, y:Speed]
-// 	}]
-// });
-// chart.render();
-//
-// var options = {
-//             chart: {
-//                 height: 350,
-//                 type: 'line',
-//                 zoom: {
-//                     enabled: false
-//                 }
-//             },
-//             series: [{
-//                 name: "Desktops",
-//                 data: Speed
-//             }],
-//             dataLabels: {
-//                 enabled: false
-//             },
-//             stroke: {
-//                 curve: 'straight'
-//             },
-//             title: {
-//                 text: 'Product Trends by Month',
-//                 align: 'left'
-//             },
-//             grid: {
-//                 row: {
-//                     colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-//                     opacity: 0.5
-//                 },
-//             }
-//             // xaxis: {
-//             //   Time,
-//             // }
-//         }
-//
-//         var chart = new ApexCharts(
-//             document.querySelector("#chart"),
-//             options
-//         );
-//
-//         chart.render();
 
-// // 2. Use the margin convention practice
-// var margin = {top: 50, right: 50, bottom: 50, left: 50}
-//   , width = window.innerWidth - margin.left - margin.right // Use the window's width
-//   , height = window.innerHeight - margin.top - margin.bottom; // Use the window's height
-//
-// // The number of datapoints
-// var n = Data.length;
-//
-// // 5. X scale will use the index of our data
-// var xScale = d3.scaleLinear()
-//     .domain([0, n-1]) // input
-//     .range([0, width]); // output
-//
-// // 6. Y scale will use the randomly generate number
-// var yScale = d3.scaleLinear()
-//     .domain([0, 1]) // input
-//     .range([height, 0]); // output
-//
-// // 7. d3's line generator
-// var line = d3.line()
-//     .x(function(d, i) { return xScale(i); }) // set the x values for the line generator
-//     .y(function(d) { return yScale(d.y); }) // set the y values for the line generator
-//     .curve(d3.curveMonotoneX) // apply smoothing to the line
-//
-// // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
-// var dataset = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
-//
-// // 1. Add the SVG to the page and employ #2
-// var svg = d3.select("body").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//   .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//
-// // 3. Call the x axis in a group tag
-// svg.append("g")
-//     .attr("class", "x axis")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(d3.axisBottom(xScale)); // Create an axis component with d3.axisBottom
-//
-// // 4. Call the y axis in a group tag
-// svg.append("g")
-//     .attr("class", "y axis")
-//     .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
-//
-// // 9. Append the path, bind the data, and call the line generator
-// svg.append("path")
-//     .datum(dataset) // 10. Binds data to the line
-//     .attr("class", "line") // Assign a class for styling
-//     .attr("d", line); // 11. Calls the line generator
+var data1 = [];
+
+for (i in Time){
+  data1.push({
+    x: Time[i]*10,
+    y: Speed[i]
+  });
+}
+
+var sum = 0;
+for (var i = 0; i < Speed.length; i++) {
+  sum += Speed[i]
+}
+
+var avg_speed = sum/Speed.length
+
+var info = d3.selectAll("#info")
+.html(" <FONT SIZE='5'>Training information <br></FONT>" + "<br>"
++"<strong>Max Speed: </strong><span class='details'>" +  max_speed
++ "<br></span>" + "<strong> Min Speed: </strong><span class='details'>"
+ + min_speed + "<br></span>" +
+  "<strong> AVG Speed: </strong><span class='details'>" +
+   avg_speed + "<br></span>"+ "<strong> Time </strong><span class='details'>"
+    + Time[Time.length-1]+"<strong> sec </strong><span class='details'>" +"<br></span>" )
+
+
+var data = [];
+var dataSeries = { type: "line" };
+
+dataSeries.dataPoints = data1;
+data.push(dataSeries);
+
+//Better to construct options first and then pass it as a parameter
+var options = {
+	zoomEnabled: true,
+	animationEnabled: true,
+	title: {
+		text: "Time Speed Chart"
+	},
+  axisX:{
+  title:"Time (seconds x 10)"
+ },
+	axisY: {
+    title: "Speed",
+		includeZero: false,
+		lineThickness: 1
+
+	},
+	data: data
+};
+
+var chart = new CanvasJS.Chart("chartContainer", options);
+chart.render();
 
 })
 }

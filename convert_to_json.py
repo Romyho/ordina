@@ -16,18 +16,11 @@ def convert(file_name):
 
     # Read csv file
     csv_name = file_name[0]
-    df = pd.read_csv(csv_name, header = 0)
-    # print(df.iat[:,4])
-    WheelDiam = df.iat[1,1]
-    Circum = df.iat[2,1]
-    Fact = df.iat[3,1]
+    df = pd.read_csv(csv_name, header = 0, sep = ";")
 
-    df = df.loc[:,"Time":"RotSpeed"]
 
-    df["WheelDiam"] = WheelDiam
-    df["Circum"] = Circum
-    df["Fact"] = Fact
-    df["Speed"] = df["RotSpeed"]*Fact
+    df = df.loc[:,["Time (s)","Gyroscope Z (deg/s)"]]
+    df.columns = ['time', 'rotspeed']
 
     # Make dictionary, write to json structure
     data = df.to_dict('response')
@@ -38,7 +31,6 @@ def convert(file_name):
     # Write json file
     with open(json_name, 'w') as outfile:
         json.dump(data, outfile, indent=4)
-
 
 
 
