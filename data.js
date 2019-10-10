@@ -48,7 +48,7 @@ var Data = JSON.parse(dataset)
 
   for (i in RotSpeed){
     Speed.push(RotSpeed[i]*Fact)
-    RotSpeed2[i]  = parseInt(RotSpeed[i]+Math.random());
+    RotSpeed2[i]  = parseInt(RotSpeed[i]+(Math.random()*2));
   }
 
   for (i in RotSpeed2){
@@ -82,14 +82,17 @@ var Data = JSON.parse(dataset)
 
   var avg_speed = sum/Speed.length
   var distance = parseInt(avg_speed*Time[Time.length-1])
-console.log(distance);
+
   var info = d3.selectAll("#info")
   .html(" <FONT SIZE='5'>Training information <br></FONT>" + "<br>"
   +"<strong>Max Speed:  </strong><span class='details'>" +  max_speed
-  + "<br></span>" + "<strong> Min Speed:  </strong><span class='details'>"
-   + min_speed + "<br></span>" +
+  + "<strong> m/s </strong><span class='details'>"
+   + "<br></span>" + "<strong> Min Speed:  </strong><span class='details'>"
+   + min_speed +"<strong> m/s </strong><span class='details'>"
+    + "<br></span>" +
     "<strong> AVG Speed: </strong><span class='details'>" +
-     avg_speed + "<br></span>"+ "<strong> Time:   </strong><span class='details'>"
+     avg_speed  +"<strong> m/s </strong><span class='details'>"
+      + "<br></span>"+ "<strong> Time:   </strong><span class='details'>"
       + Time[Time.length-1]+"<strong> sec </strong><span class='details'>" +"<br></span>"+
        "<strong> Distance:   </strong><span class='details'>"+ distance +"<strong> m </strong><span class='details'>"
         +"<br></span>" )
@@ -114,7 +117,7 @@ console.log(distance);
     title:"Time (seconds x 10)"
    },
   	axisY: {
-      title: "Speed",
+      title: "Speed (m/s)",
   		includeZero: false,
   		lineThickness: 1
 
@@ -122,7 +125,9 @@ console.log(distance);
     data:data
   };
 
+
   var chart = new CanvasJS.Chart("chartContainer",options);
   chart.render();
+
 
 }
