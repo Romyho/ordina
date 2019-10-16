@@ -19,14 +19,14 @@ def convert(file_name):
     df = pd.read_csv(csv_name, header = 0, sep = ";")
 
 
-    df = df.loc[:,["Time (s)","Gyroscope Z (deg/s)"]]
-    df.columns = ['time', 'rotspeed']
+    # df = df.loc[:,["Time (s)","Gyroscope Z (deg/s)"]]
+    # df.columns = ['time', 'rotspeed']
 
     # Make dictionary, write to json structure
     data = df.to_dict('response')
 
     # Json file name
-    json_name = csv_name.split(".csv")[0]+".json"
+    json_name = csv_name.split(".csv")[0]+"1.json"
 
     # Write json file
     with open(json_name, 'w') as outfile:
